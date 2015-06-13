@@ -14,6 +14,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.OverlayLayout;
 
@@ -47,13 +48,8 @@ class Table extends JPanel {
 	    dealerlabel.setText("  Dealer:  ");
 	    playerlabel.setText("  Player:  ");
 	    
-	    add (dcardPanel);
-	    add (pcardPanel);
-	    add (topPanel);
-	    
 	    topPanel.add(start);
 	    
-	    //setLayout(new BorderLayout());
 	    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 	    //pcardPanel.setLayout(overlay);
 	    
@@ -119,22 +115,40 @@ class Table extends JPanel {
 		repaint();
 	}
 	
-	void endGame(boolean isWin) {
-		
+	void newGame() {
 		removeAll();
 		setBackground(new Color(0, 122, 0));
 		
+		pcardPanel.removeAll();
+		dcardPanel.removeAll();
+		topPanel.removeAll();
+		topPanel.add(start);
+		
+		add(dcardPanel);
+	    add(pcardPanel);
+	    add(topPanel);
+	    
+	    validate();
+		repaint();
+		
+		
+	}
+	
+	int endGame(boolean isWin) {
+		
+		int res;
+		
 		if (isWin == true)
-			add(new JLabel("You won!"));
+			res = JOptionPane.showConfirmDialog(this, "You won! Would you like to play again?", "Confirm", JOptionPane.YES_NO_CANCEL_OPTION);
 		else
-			add(new JLabel("You Lost"));
+			res = JOptionPane.showConfirmDialog(this, "You lost. Would you like to play again?", "Confirm", JOptionPane.YES_NO_CANCEL_OPTION);
 		
 		validate();
 		repaint();
+		
+		return res;
 	}
 	
-	//have hitPlayer and hitDealer methods for table class
-	//Call on every hit
 	public void hitPlayer(Player p) {
 		JLabel hits = new JLabel(new ImageIcon(p.hand.get(p.hand.size()-1).img));
 		//hits.setAlignmentY(alignmentY);

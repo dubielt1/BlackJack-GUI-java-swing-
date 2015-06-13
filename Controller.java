@@ -21,7 +21,6 @@ public class Controller implements Observer {
 		this.t.addStartListener(new StartListener());
 		this.t.addStayListener(new StayListener());
 		
-		//t.display();
 	}
 	
 	public void go() {
@@ -34,9 +33,42 @@ public class Controller implements Observer {
 		
 	}
 	
+	void loss() {
+		int result = t.endGame(false);
+		System.out.println(result);
+		
+		if (result == 0) {
+			game = new BlackJack();
+			
+			game.addObserver(this);
+			
+			t.newGame();
+		}
+		
+		else
+			System.exit(0);
+	}
+	
+	void win() {
+		int result = t.endGame(true);
+		System.out.println(result);
+		
+		if (result == 0) {
+			game = new BlackJack();
+			
+			game.addObserver(this);
+			
+			t.newGame();
+		}
+		
+		else
+			System.exit(0);
+	}
+	
 	class HitListener implements ActionListener {
 		
 		public void actionPerformed(ActionEvent e) {
+			
 			
 			game.hit();
 			
@@ -45,7 +77,7 @@ public class Controller implements Observer {
 			Timer timer = new Timer(2500, new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if (game.isBust() == true) 
-						t.endGame(false);
+						loss();
 				}
 			});
 			
@@ -72,9 +104,9 @@ public class Controller implements Observer {
 			Timer timer = new Timer(2500, new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if (game.isWin() == true)
-						t.endGame(true);
+						win(); 
 					else
-						t.endGame(false);
+						loss();
 				}
 			});
 			
@@ -83,33 +115,5 @@ public class Controller implements Observer {
 		}
 		
 	}
-	
-	class TimerListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			
-			if (game.isBust() == true) {
-				t.endGame(false);
-			}
-			
-			
-		}
-	}
-	
-	/*private void doHit() {
-		game.hit();
-	}
-	
-	private void dealerHit() {
-		t.hitDealer(game.getDealer());
-	}
-	
-	private void doStay() {
-		game.stay();
-		//
-	}
-	
-	private void drawHit() {
-		t.hitPlayer(game.getPlayer());
-	}*/
 	
 }
